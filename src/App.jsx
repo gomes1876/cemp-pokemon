@@ -1,9 +1,14 @@
-import "./App.css";
+import React from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { CssBaseline, Container, Typography, Button } from "@mui/material";
+import { motion } from "framer-motion";
 import useTournament from "./hooks/useTournament";
 import PlayerForm from "./components/PlayerForm";
 import PlayerList from "./components/PlayerList";
 import MatchList from "./components/MatchList";
 import Ranking from "./components/Ranking";
+import "./App.css";
+import { theme } from "./config/theme";
 
 function App() {
   const {
@@ -19,29 +24,54 @@ function App() {
   } = useTournament();
 
   return (
-    <div className="App">
-      <h1>Campeonato Pokémon TCG</h1>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Typography variant="h1" align="center" gutterBottom>
+            Campeonato Pokémon TCG
+          </Typography>
+        </motion.div>
 
-      <PlayerForm addPlayer={addPlayer} />
-      <PlayerList players={players} disqualifyPlayer={disqualifyPlayer} />
+        <PlayerForm addPlayer={addPlayer} />
+        <PlayerList players={players} disqualifyPlayer={disqualifyPlayer} />
 
-      <button
-        onClick={() => generateMatches()}
-        disabled={currentRound >= maxRounds}
-      >
-        Gerar Nova Rodada ({currentRound}/{maxRounds})
-      </button>
-      <button onClick={() => generateMatches(true)}>
-        Recriar Rodada Atual
-      </button>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => generateMatches()}
+            disabled={currentRound >= maxRounds}
+            sx={{ mr: 2, mt: 2 }}
+          >
+            Gerar Nova Rodada ({currentRound}/{maxRounds})
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => generateMatches(true)}
+            sx={{ mt: 2 }}
+          >
+            Recriar Rodada Atual
+          </Button>
+        </motion.div>
 
-      <MatchList
-        matches={matches}
-        setMatchResult={setMatchResult}
-        currentRound={currentRound}
-      />
-      <Ranking ranking={ranking} />
-    </div>
+        <MatchList
+          matches={matches}
+          setMatchResult={setMatchResult}
+          currentRound={currentRound}
+        />
+        <Ranking ranking={ranking} />
+      </Container>
+    </ThemeProvider>
   );
 }
 

@@ -1,26 +1,52 @@
+import React from "react";
+import {
+  Typography,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { motion } from "framer-motion";
+
 function MatchList({ matches, setMatchResult, currentRound }) {
   return (
-    <div>
-      <h2>Partidas - Rodada {currentRound}</h2>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3, duration: 0.5 }}
+    >
+      <Typography variant="h2" gutterBottom>
+        Partidas - Rodada {currentRound}
+      </Typography>
       {matches.map((match, index) => (
-        <div key={index}>
-          {match.player1} vs {match.player2}
-          {match.player2 === "BYE" ? (
-            <span> (Vitória por bye - 3 pontos)</span>
-          ) : (
-            <select
-              onChange={(e) => setMatchResult(index, e.target.value)}
-              value={match.result || ""}
-            >
-              <option value="">Selecionar resultado</option>
-              <option value="p1">{match.player1} venceu</option>
-              <option value="p2">{match.player2} venceu</option>
-              <option value="draw">Empate</option>
-            </select>
+        <Box key={index} sx={{ mb: 2 }}>
+          <Typography>
+            {match.player1} vs {match.player2}{" "}
+            {match.player2 === "BYE" && (
+              <span style={{ color: "#388E3C" }}>
+                (Vitória por bye - 3 pontos)
+              </span>
+            )}
+          </Typography>
+          {match.player2 !== "BYE" && (
+            <FormControl sx={{ minWidth: 200, mt: 1 }}>
+              <InputLabel sx={{ color: "#FFFFFF" }}>Resultado</InputLabel>
+              <Select
+                value={match.result || ""}
+                onChange={(e) => setMatchResult(index, e.target.value)}
+                label="Resultado"
+              >
+                <MenuItem value="">Selecionar resultado</MenuItem>
+                <MenuItem value="p1">{match.player1} venceu</MenuItem>
+                <MenuItem value="p2">{match.player2} venceu</MenuItem>
+                <MenuItem value="draw">Empate</MenuItem>
+              </Select>
+            </FormControl>
           )}
-        </div>
+        </Box>
       ))}
-    </div>
+    </motion.div>
   );
 }
 
